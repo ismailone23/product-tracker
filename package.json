@@ -6,6 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "generate":"drizzle-kit generate",
+    "migrate":"tsx src/script/migrate.ts",
+    "studio": "drizzle-kit studio",
     "lint": "next lint"
   },
   "dependencies": {
