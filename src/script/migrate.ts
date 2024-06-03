@@ -6,7 +6,6 @@ import { drizzle } from "drizzle-orm/postgres-js";
 
 const migrationClient = postgres(env.DATABASE_URL, { max: 1 });
 
-
 (async () => {
     await migrate(drizzle(migrationClient), {
         migrationsFolder: 'drizzle'

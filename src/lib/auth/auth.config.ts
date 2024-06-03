@@ -4,7 +4,7 @@ import Discord from 'next-auth/providers/discord'
 
 export default {
     providers: [
-        Github,
-        Discord
+        Github({ allowDangerousEmailAccountLinking: true }),
+        Discord({ allowDangerousEmailAccountLinking: true })
     ]
 } satisfies NextAuthConfig
