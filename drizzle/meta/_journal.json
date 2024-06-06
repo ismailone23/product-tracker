@@ -5,8 +5,22 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1717442532554,
-      "tag": "0000_perfect_madripoor",
+      "when": 1717522864946,
+      "tag": "0000_bored_madripoor",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1717567060654,
+      "tag": "0001_pink_mockingbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1717675734767,
+      "tag": "0002_mature_blacklash",
       "breakpoints": true
     }
   ]

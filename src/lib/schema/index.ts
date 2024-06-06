@@ -146,7 +146,8 @@ export const ProductTable = pgTable("products", {
     id: uuid("id").primaryKey().notNull().defaultRandom(),
     product_name: varchar("product_name").notNull(),
     price: real("price").notNull(),
-    stoc: integer("stock").notNull(),
+    stock: real("stock").notNull(),
+    image: text("image"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow()
 })

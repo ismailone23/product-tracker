@@ -1,6 +1,6 @@
 {
-  "id": "8e995d61-922a-41ee-b0f2-e8f700b8aafa",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "e3aa6fc7-6cba-48b5-b9fc-4d06409ebe08",
+  "prevId": "fa650b64-ca52-4af6-bc6f-47a2d8df3143",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -270,9 +270,15 @@
         },
         "stock": {
           "name": "stock",
-          "type": "integer",
+          "type": "real",
           "primaryKey": false,
           "notNull": true
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
