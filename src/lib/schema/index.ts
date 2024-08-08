@@ -12,7 +12,6 @@ import {
     real,
     integer,
     primaryKey,
-    boolean
 } from 'drizzle-orm/pg-core'
 
 

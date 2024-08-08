@@ -7,7 +7,7 @@ export default function Input({ type, name, title, color }: {
     return (
         <div className="w-full flex flex-col items-start">
             <label htmlFor={name} className="text-sm">{title}</label>
-            <input type={type} name={name} id={name}
+            <input required={type != 'file'} type={type} name={name} id={name}
                 className={`outline-none ${color ? color : "border-blue-400 border-2"} w-full rounded-md px-2 py-2 text-sm`} />
         </div>
     )

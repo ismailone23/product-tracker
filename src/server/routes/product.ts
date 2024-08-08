@@ -12,5 +12,8 @@ export const productRouter = createTRPCRouter({
             const newStock = await db.insert(ProductTable).values({ product_name, image, price, stock }).returning()
             if (!newStock) throw new Error("failed to create")
             return newStock
-        })
+        }),
+    getStock: protectedRouter.query(async ({ ctx: { db } }) => {
+        return await db.select().from(ProductTable)
+    })
 })

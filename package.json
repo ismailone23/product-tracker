@@ -22,6 +22,7 @@
     "@trpc/react-query": "11.0.0-rc.390",
     "@trpc/server": "11.0.0-rc.390",
     "drizzle-orm": "^0.31.0",
+    "firebase": "^10.12.2",
     "next": "14.2.3",
     "next-auth": "5.0.0-beta.15",
     "pg": "^8.11.5",

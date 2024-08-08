@@ -9,7 +9,7 @@ export default function page({ children }: { children: ReactNode }) {
                 <div><Navbar /></div>
                 <div className='w-full h-full grid grid-cols-6'>
                     <div className='col-span-1 h-full overflow-y-auto border-r'><Sidebar /></div>
-                    <div className='w-full col-span-5'>{children}</div>
+                    <div className='w-full col-span-5 h-full overflow-auto'>{children}</div>
                 </div>
             </div>
         </div>
