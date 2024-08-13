@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1717522864946,
-      "tag": "0000_bored_madripoor",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1717567060654,
-      "tag": "0001_pink_mockingbird",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1717675734767,
-      "tag": "0002_mature_blacklash",
+      "when": 1723529460297,
+      "tag": "0000_public_doctor_faustus",
       "breakpoints": true
     }
   ]

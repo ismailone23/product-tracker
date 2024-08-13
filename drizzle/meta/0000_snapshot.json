@@ -1,5 +1,5 @@
 {
-  "id": "8e995d61-922a-41ee-b0f2-e8f700b8aafa",
+  "id": "6b3423bb-f428-4236-a4ec-882e51c9eae2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -270,7 +270,13 @@
         },
         "stock": {
           "name": "stock",
-          "type": "integer",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },

@@ -4,7 +4,7 @@ import { api } from '@/trpc/shared'
 import React from 'react'
 
 export default function TrpcCheck() {
-    const hello = api.post.hello.useQuery().data
+    const hello = api.hello.useQuery().data
     console.log(hello);
 
     return (

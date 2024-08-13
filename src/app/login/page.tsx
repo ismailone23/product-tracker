@@ -3,13 +3,13 @@ import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
 
-export default function page() {
+export default function Page() {
     const { push } = useRouter();
     const session = useSession();
 
     useEffect(() => {
         if (session.status === 'authenticated') push('/dashboard');
-    }, [session])
+    }, [session, push])
     return (
         <div className='w-full h-screen flex items-center justify-center'>
             <div className='p-2 max-w-[300px] w-full border flex flex-col gap-2'>
