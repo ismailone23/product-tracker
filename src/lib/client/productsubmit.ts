@@ -1,7 +1,7 @@
 import { storage } from "@/firebase"
 import { ProductTableType } from "@/types";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage"
-import { ChangeEvent, Dispatch, MutableRefObject, SetStateAction } from "react"
+import { Dispatch, MutableRefObject, SetStateAction } from "react"
 
 export const handleFormForStock = async (
     formref: MutableRefObject<HTMLFormElement | null>,
@@ -12,7 +12,7 @@ export const handleFormForStock = async (
 ) => {
     setMessage(null)
     const formData = new FormData(formref.current as HTMLFormElement)
-    const { price, stock, product_name } = Object.fromEntries(formData)
+    const { price, stock, product_name, originalPrice, discount } = Object.fromEntries(formData)
     const imagefile = formData.get("image") as File
 
     if (imagefile.size > 0) {
@@ -24,6 +24,8 @@ export const handleFormForStock = async (
             return {
                 image: imgUrl as string,
                 price: Number(price),
+                originalPrice: Number(originalPrice),
+                discount: Number(discount),
                 product_name: product_name as string,
                 stock: Number(stock)
             }
@@ -34,6 +36,8 @@ export const handleFormForStock = async (
         return {
             image: 'no image',
             price: Number(price),
+            originalPrice: Number(originalPrice),
+            discount: Number(discount),
             product_name: product_name as string,
             stock: Number(stock)
         }
@@ -50,7 +54,7 @@ export const handleUpdateStockForm = async (
 ) => {
     setMessage(null)
     const formData = new FormData(formref.current as HTMLFormElement)
-    const { price, stock, product_name } = Object.fromEntries(formData)
+    const { price, stock, product_name, originalPrice, discount } = Object.fromEntries(formData)
     const imagefile = formData.get("image") as File
     const product = allProducts.filter(product => product.id === id)[0]
     if (imagefile.size > 0) {
@@ -60,11 +64,13 @@ export const handleUpdateStockForm = async (
             await uploadBytesResumable(newImageRef, imagefile);
             const imgUrl = await getDownloadURL(newImageRef);
             return {
-                image: imgUrl as string,
-                price: Number(price),
-                product_name: product_name as string,
-                stock: Number(stock),
                 id,
+                price: Number(price),
+                stock: Number(stock),
+                image: imgUrl as string,
+                discount: Number(discount),
+                originalPrice: Number(originalPrice),
+                product_name: product_name as string,
                 updatedAt: Number(stock) !== product.stock ? new Date(Date.now()) : product.updatedAt
             }
         } catch (error) {
@@ -72,11 +78,13 @@ export const handleUpdateStockForm = async (
         }
     } else {
         return {
+            id,
             image: product.image,
             price: Number(price),
-            product_name: product_name as string,
             stock: Number(stock),
-            id,
+            discount: Number(discount),
+            product_name: product_name as string,
+            originalPrice: Number(originalPrice),
             updatedAt: Number(stock) !== product.stock ? new Date(Date.now()) : product.updatedAt
         }
     }

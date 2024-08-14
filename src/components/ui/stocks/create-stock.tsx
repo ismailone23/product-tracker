@@ -19,6 +19,10 @@ export default function CreatStock({
             <button className='absolute right-5 text-lg cursor-pointer top-2' onClick={() => setIsOpen(!isOpen)}>&times;</button>
             <Input type="text" name="product_name" title="Product Name" />
             <div className="w-full flex gap-2">
+                <Input type="number" name="originalPrice" title="Original Price" />
+                <Input type="number" name="discount" title="Discount" />
+            </div>
+            <div className="w-full flex gap-2">
                 <Input type="number" name="price" title="Product Price" />
                 <Input type="number" name="stock" title="Product Quantity" />
             </div>

@@ -35,8 +35,18 @@ export default function EditStock({
             </div>
             <div className='grid grid-cols-2 gap-1 w-full'>
                 <div className='flex flex-col'>
-                    <label htmlFor="price">Price</label>
-                    <input className='outline-none border border-gray-100 rounded py-1 px-2' type="number" name="price" id="price" defaultValue={product?.price} />
+                    <label htmlFor="price">Original Price</label>
+                    <input className='outline-none border border-gray-100 rounded py-1 px-2' type="number" name="originalPrice" id="originalPrice" defaultValue={product?.extra?.originalPrice} />
+                </div>
+                <div className='flex flex-col'>
+                    <label htmlFor="stock">Discount</label>
+                    <input className='outline-none border border-gray-100 rounded py-1 px-2' type="number" name="discount" id="discount" defaultValue={product?.extra?.discount} />
+                </div>
+            </div>
+            <div className='grid grid-cols-2 gap-1 w-full'>
+                <div className='flex flex-col'>
+                    <label htmlFor="price">Product Price</label>
+                    <input className='outline-none border border-gray-100 rounded py-1 px-2' type="number" name="price" id="cellPrice" defaultValue={product?.price} />
                 </div>
                 <div className='flex flex-col'>
                     <label htmlFor="stock">Stock</label>

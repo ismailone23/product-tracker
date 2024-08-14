@@ -13,7 +13,6 @@ import {
     integer,
     primaryKey,
 } from 'drizzle-orm/pg-core'
-import { z } from 'zod';
 
 
 export const UserRole = pgEnum("userRole", ["OWNER", "ADMIN", "MEMBER"]);
@@ -128,19 +127,19 @@ export const InvoiceTable = pgTable("invoices", {
     updatedAt: timestamp("updated_at").notNull().defaultNow()
 })
 // relation between customerTable and invoice table
-export const CustomersTableRelation = relations(CustomersTable, ({ many }) => {
-    return {
-        invoices: many(InvoiceTable)
-    }
-})
-export const InvoiceTableRelation = relations(InvoiceTable, ({ one }) => {
-    return {
-        user: one(UserTable, {
-            fields: [InvoiceTable.customerId],
-            references: [UserTable.id]
-        })
-    }
-})
+// export const CustomersTableRelation = relations(CustomersTable, ({ many }) => {
+//     return {
+//         invoices: many(InvoiceTable)
+//     }
+// })
+// export const InvoiceTableRelation = relations(InvoiceTable, ({ one }) => {
+//     return {
+//         user: one(UserTable, {
+//             fields: [InvoiceTable.customerId],
+//             references: [UserTable.id]
+//         })
+//     }
+// })
 export const ProductTable = pgTable("products", {
     id: uuid("id").primaryKey().notNull().defaultRandom(),
     product_name: varchar("product_name").notNull(),
@@ -149,4 +148,27 @@ export const ProductTable = pgTable("products", {
     image: text("image").notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow()
+})
+export const PriceDiscountTable = pgTable("pricediscount", {
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
+    productId: uuid("product_id").references(() => ProductTable.id).notNull(),
+    originalPrice: real("original_price").notNull(),
+    discount: real('discount').notNull().default(0),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow()
+})
+export const ProductPriceDiscountRelation = relations(ProductTable, ({ one }) => {
+    return {
+        extra: one(PriceDiscountTable)
+    }
+})
+export const PriceProductRelation = relations(PriceDiscountTable, ({ one }) => {
+    return {
+        product: one(ProductTable,
+            {
+                fields: [PriceDiscountTable.productId],
+                references: [ProductTable.id]
+            }
+        )
+    }
 })

@@ -6,14 +6,16 @@ import Displays from "@/components/ui/stocks/displays";
 import EditStock from "@/components/ui/stocks/edit-stock";
 import { handleFormForStock, handleUpdateStockForm } from "@/lib/client/productsubmit";
 import { api } from "@/trpc/shared"
-import { ProductTableType } from "@/types";
-import { FormEvent, useRef, useState } from "react";
+import { handleformtype, ProductTableType } from "@/types";
+import { FormEvent, Suspense, useRef, useState } from "react";
 
-export default function Page() {
+export default function Page({ searchParams }: { searchParams?: { page?: string } }) {
     const formref = useRef<HTMLFormElement | null>(null)
     const upformref = useRef<HTMLFormElement | null>(null)
+
     const [searchText, setSearchText] = useState<string>('')
-    const allProductsApi = api.product.getProduct.useQuery({ title: null, id: null });
+    const pagen = Number(searchParams?.page) || 1;
+    const allProductsApi = api.product.getProduct.useQuery({ page: pagen, pagesize: 6 });
     const allProducts = allProductsApi.data as ProductTableType[]
     const [loading, setLoading] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -49,22 +51,23 @@ export default function Page() {
     const handleStockForm = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true)
-        let data = await handleFormForStock(formref, setMessage).then(data => data) as ProductTableType
-        createStockapi.mutate({ image: data.image as string, price: data.price, product_name: data.product_name, stock: data.stock })
+        let data = await handleFormForStock(formref, setMessage).then(data => data) as handleformtype
+        createStockapi.mutate({ ...data })
+        formref.current?.reset()
         setLoading(false)
         setIsOpen(false)
-        formref.current?.reset()
     }
     const handleupdateProductForm = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true)
-        let data = await handleUpdateStockForm(upformref, setMessage, allProducts, id).then(data => data) as ProductTableType
+        let data = await handleUpdateStockForm(upformref, setMessage, allProducts, id).then(data => data) as handleformtype
         updateProductApi.mutate({ ...data })
-        e.preventDefault();
+        formref.current?.reset()
         setIsUpdateOpen(false)
         setLoading(false)
     }
     const handleIncDec = (type: "inc" | "dec" | "del", id: string, stock: ProductTableType) => {
+        setLoading(true)
         if (type === 'inc') {
             updateProductApi.mutate({ ...stock, updatedAt: new Date(Date.now()), stock: stock.stock + 1 })
         }
@@ -75,6 +78,7 @@ export default function Page() {
         else {
             if (confirm("do you want to delete it for sure ? ")) { deleteProductApi.mutate({ id }) }
         }
+        setLoading(false)
     }
     return (
         <div className="w-full h-full overflow-y-auto flex p-2 items-center flex-col">
@@ -85,9 +89,11 @@ export default function Page() {
                 </div>
                 {
                     Number(allProducts?.length) > 0 ?
-                        <Displays setId={setId} searchText={searchText} products={allProducts}
-                            handleIncDec={handleIncDec} isUpdateOpen={isUpdateOpen}
-                            setIsUpdateOpen={setIsUpdateOpen} setMessage={setMessage} />
+                        <Suspense fallback={<p>loading....</p>}>
+                            <Displays loading={loading} setId={setId} searchText={searchText} products={allProducts}
+                                handleIncDec={handleIncDec} isUpdateOpen={isUpdateOpen}
+                                setIsUpdateOpen={setIsUpdateOpen} />
+                        </Suspense>
                         :
                         <p className="italic">No Data</p>
                 }
