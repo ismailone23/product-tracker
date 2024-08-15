@@ -1,6 +1,6 @@
 
 import { type AdapterAccount } from 'next-auth/adapters';
-import { relations } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 import {
     pgEnum,
     pgTable,
@@ -11,8 +11,9 @@ import {
     varchar,
     real,
     integer,
-    primaryKey,
+    primaryKey
 } from 'drizzle-orm/pg-core'
+import { invoiceIdtype } from '@/types';
 
 
 export const UserRole = pgEnum("userRole", ["OWNER", "ADMIN", "MEMBER"]);
@@ -108,38 +109,44 @@ export const VerificationTokensRelations = relations(
 export const CustomersTable = pgTable('customers', {
     id: uuid("id").primaryKey().notNull().defaultRandom(),
     name: varchar("name").notNull(),
-    email: varchar("email"),
-    image: text("image"),
-    phone: varchar("phone").notNull(),
-    createdAt: timestamp("created_at").notNull().defaultNow()
+    phone: varchar("phone").notNull().unique(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow()
 }, table => {
     return {
-        emailIndex: uniqueIndex("emailIndex").on(table.email),
         phoneIndex: uniqueIndex("phoneIndex").on(table.phone),
     }
 })
 
+export type CustomersTableType = typeof CustomersTable;
+
 export const InvoiceTable = pgTable("invoices", {
     id: uuid('id').primaryKey().notNull().defaultRandom(),
-    customerId: uuid("customer_id").references(() => UserTable.id).notNull(),
-    purchased_list: varchar("purchased_list").array().notNull(),
+    customerId: uuid("customer_id").references(() => CustomersTable.id).notNull(),
+    purchased_list: text("purchased_list").notNull(),
+    totalbill: real("total_bill").notNull(),
+    originalbill: real("original_bill").notNull(),
+    extradiscount: real("extra_discount").notNull(),
+    tax: real("tax").notNull().default(0),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow()
 })
-// relation between customerTable and invoice table
-// export const CustomersTableRelation = relations(CustomersTable, ({ many }) => {
-//     return {
-//         invoices: many(InvoiceTable)
-//     }
-// })
-// export const InvoiceTableRelation = relations(InvoiceTable, ({ one }) => {
-//     return {
-//         user: one(UserTable, {
-//             fields: [InvoiceTable.customerId],
-//             references: [UserTable.id]
-//         })
-//     }
-// })
+
+export const CustomerInvoiceRelation = relations(CustomersTable, ({ many }) => {
+    return {
+        invoices: many(InvoiceTable)
+    }
+})
+
+export const InvoiceCustomerRelation = relations(InvoiceTable, ({ one }) => {
+    return {
+        customer: one(CustomersTable, {
+            fields: [InvoiceTable.customerId],
+            references: [CustomersTable.id]
+        })
+    }
+})
+
 export const ProductTable = pgTable("products", {
     id: uuid("id").primaryKey().notNull().defaultRandom(),
     product_name: varchar("product_name").notNull(),

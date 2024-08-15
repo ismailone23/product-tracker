@@ -1,5 +1,5 @@
 {
-  "id": "da3901d7-0bd3-4dc3-9c3d-d11add29a776",
+  "id": "093016e6-02c3-4348-b2f4-6a0d880ebaef",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -126,18 +126,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "email": {
-          "name": "email",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "image": {
-          "name": "image",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "phone": {
           "name": "phone",
           "type": "varchar",
@@ -150,24 +138,16 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {
-        "emailIndex": {
-          "name": "emailIndex",
-          "columns": [
-            {
-              "expression": "email",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "phoneIndex": {
           "name": "phoneIndex",
           "columns": [
@@ -186,7 +166,15 @@
       },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "customers_phone_unique": {
+          "name": "customers_phone_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "phone"
+          ]
+        }
+      }
     },
     "public.invoices": {
       "name": "invoices",
@@ -207,9 +195,34 @@
         },
         "purchased_list": {
           "name": "purchased_list",
-          "type": "varchar[]",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "total_bill": {
+          "name": "total_bill",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "original_bill": {
+          "name": "original_bill",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "extra_discount": {
+          "name": "extra_discount",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tax": {
+          "name": "tax",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",
@@ -228,10 +241,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "invoices_customer_id_users_id_fk": {
-          "name": "invoices_customer_id_users_id_fk",
+        "invoices_customer_id_customers_id_fk": {
+          "name": "invoices_customer_id_customers_id_fk",
           "tableFrom": "invoices",
-          "tableTo": "users",
+          "tableTo": "customers",
           "columnsFrom": [
             "customer_id"
           ],
@@ -272,7 +285,8 @@
           "name": "discount",
           "type": "real",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",

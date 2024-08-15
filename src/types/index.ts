@@ -26,5 +26,28 @@ export type handleformtype = {
     price: number;
     riginalPrice: number;
     discount: number;
-
+}
+export type invoiceIdtype = {
+    id: string,
+    count: number
+}
+export type invoiceformtype = {
+    id?: string;
+    name: string;
+    phone: string;
+    originalbill: string;
+    extradiscount: string;
+    tax: string;
+    totalbill: string;
+}
+export type InvoiceTableType = {
+    id: string;
+    customerId: string;
+    originalbill: number;
+    extradiscount: number;
+    tax: number;
+    totalbill: number;
+    purchased_list: string
+    createdAt: Date;
+    updatedAt: Date;
 }

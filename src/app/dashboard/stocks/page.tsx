@@ -8,11 +8,12 @@ import { handleFormForStock, handleUpdateStockForm } from "@/lib/client/products
 import { api } from "@/trpc/shared"
 import { handleformtype, ProductTableType } from "@/types";
 import { FormEvent, Suspense, useRef, useState } from "react";
+import Displayskeleton from '@/app/dashboard/stocks/displayskeleton'
+import Searchbar from "@/components/shared/searchbar";
 
 export default function Page({ searchParams }: { searchParams?: { page?: string } }) {
     const formref = useRef<HTMLFormElement | null>(null)
     const upformref = useRef<HTMLFormElement | null>(null)
-
     const [searchText, setSearchText] = useState<string>('')
     const pagen = Number(searchParams?.page) || 1;
     const allProductsApi = api.product.getProduct.useQuery({ page: pagen, pagesize: 6 });
@@ -81,37 +82,49 @@ export default function Page({ searchParams }: { searchParams?: { page?: string 
         setLoading(false)
     }
     return (
-        <div className="w-full h-full overflow-y-auto flex p-2 items-center flex-col">
-            <div className="w-full flex flex-col items-center h-full overflow-auto gap-2 px-5">
-                <Sharedtop isOpen={isOpen} setIsOpen={setIsOpen} text="Stocks" />
-                <div className="w-full">
-                    <input placeholder="search product" className="outline-none border font-normal border-gray-200 rounded px-2 py-1 w-full" type="text" value={searchText} onChange={e => setSearchText(e.currentTarget.value)} />
-                </div>
-                {
-                    Number(allProducts?.length) > 0 ?
+        <div className="w-full h-full overflow-y-auto flex items-center flex-col">
+            <div className="w-full flex flex-col items-center h-full overflow-auto gap-2">
+                <Sharedtop isOpen={isOpen} setIsOpen={setIsOpen} text="Stock" />
+                <Searchbar searchText={searchText} setSearchText={setSearchText} text="product" />
+                <div className="w-full flex px-4 flex-col">
+                    {allProductsApi.isFetching ?
                         <Suspense fallback={<p>loading....</p>}>
-                            <Displays loading={loading} setId={setId} searchText={searchText} products={allProducts}
-                                handleIncDec={handleIncDec} isUpdateOpen={isUpdateOpen}
-                                setIsUpdateOpen={setIsUpdateOpen} />
+                            <div className="flex flex-col gap-2">
+                                <Displayskeleton />
+                                <Displayskeleton />
+                            </div>
                         </Suspense>
                         :
-                        <p className="italic">No Data</p>
+                        allProducts && (
+                            allProducts.length > 0 ?
+                                <Displays loading={loading} setId={setId} searchText={searchText} products={allProducts}
+                                    handleIncDec={handleIncDec} isUpdateOpen={isUpdateOpen}
+                                    setIsUpdateOpen={setIsUpdateOpen} />
+                                :
+                                <p className="italic">No Data</p>)
+                    }
+                </div>
+                {
+                    isOpen &&
+                    <CreatStock
+                        formref={formref}
+                        handleStockForm={handleStockForm}
+                        setIsOpen={setIsOpen}
+                        isOpen={isOpen}
+                        loading={loading}
+                    />
                 }
                 {
-                    isOpen && <div className="w-full bg-gray-100 bg-opacity-50 top-0 items-center left-0 flex justify-center h-full absolute">
-                        <form ref={formref} onSubmit={(e) => handleStockForm(e)}
-                            className="max-w-screen-md w-full bg-white p-5 relative flex-col flex gap-2">
-                            <CreatStock setIsOpen={setIsOpen} isOpen={isOpen} loading={loading} />
-                        </form>
-                    </div>
-                }
-                {
-                    isUpdateOpen && <div className="w-full bg-gray-100 bg-opacity-50 top-0 items-center left-0 flex justify-center h-full absolute">
-                        <form ref={upformref} onSubmit={(e) => handleupdateProductForm(e)}
-                            className="max-w-screen-md w-full bg-white p-5 relative flex-col flex gap-2">
-                            <EditStock id={id} setIsUpdateOpen={setIsUpdateOpen} isUpdateOpen={isUpdateOpen} products={allProducts} loading={loading} />
-                        </form>
-                    </div>
+                    isUpdateOpen &&
+                    <EditStock
+                        handleupdateProductForm={handleupdateProductForm}
+                        id={id}
+                        upformref={upformref}
+                        setIsUpdateOpen={setIsUpdateOpen}
+                        isUpdateOpen={isUpdateOpen}
+                        products={allProducts}
+                        loading={loading} />
+
                 }
                 {
                     message &&

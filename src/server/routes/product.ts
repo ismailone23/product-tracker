@@ -19,9 +19,27 @@ export const productRouter = createTRPCRouter({
             return priceTable
         }),
     getProduct: protectedRouter
-        .input(z.object({ page: z.number().gt(0, { message: "must be greater than 0" }), pagesize: z.number().min(6).max(10) }))
+        .input(z.object({
+            page: z.number().gt(0, { message: "must be greater than 0" }).optional(),
+            pagesize: z.number().min(6).max(10).optional()
+        }))
         .query(async ({ input: { page, pagesize }, ctx: { db } }) => {
-            const offset = (page - 1) * pagesize;
+            if (page && pagesize) {
+                const offset = (page - 1) * pagesize;
+                return await db.query.ProductTable.findMany({
+                    with: {
+                        extra: {
+                            columns: {
+                                createdAt: false,
+                                updatedAt: false
+                            }
+                        }
+                    },
+                    limit: pagesize,
+                    offset,
+                    orderBy: asc(ProductTable.createdAt),
+                })
+            }
             return await db.query.ProductTable.findMany({
                 with: {
                     extra: {
@@ -31,25 +49,23 @@ export const productRouter = createTRPCRouter({
                         }
                     }
                 },
-                limit: pagesize,
-                offset,
-                orderBy: asc(ProductTable.createdAt),
+                orderBy: asc(ProductTable.createdAt)
             })
         }),
     updateProduct: protectedRouter.input(
         z.object({
             id: z.string(),
-            product_name: z.string(),
-            price: z.number().gt(0, { message: "Please enter a number greater than 0" }),
+            product_name: z.string().optional(),
+            price: z.number().gt(0, { message: "Please enter a number greater than 0" }).optional(),
             originalPrice: z.number().gt(0, { message: "Please enter a number greater than 0" }).optional(),
             discount: z.number().lt(100, { message: "Please enter less than 100%" }).optional(),
-            stock: z.number(),
-            image: z.string(),
+            stock: z.number().optional(),
+            image: z.string().optional(),
             updatedAt: z.date(),
         })).mutation(async ({ input: { id, image, product_name, updatedAt, stock, price, originalPrice, discount, }, ctx: { db } }) => {
             const updateSid = await db.update(ProductTable).set({ image, product_name, updatedAt, stock, price }).where(eq(ProductTable.id, id)).returning({ id: ProductTable.id });
             if (!updateSid) throw new Error("failed to update")
-            const priceTable = await db.update(PriceDiscountTable).set({ updatedAt, discount, originalPrice, productId: id }).returning()
+            const priceTable = await db.update(PriceDiscountTable).set({ updatedAt, discount, originalPrice, productId: id }).where(eq(PriceDiscountTable.productId, id)).returning()
             if (!priceTable) throw new Error("failed to update")
 
             return priceTable;

@@ -12,10 +12,11 @@ export default function Sharedtop({
     setIsOpen: Dispatch<SetStateAction<boolean>>
 }) {
     return (
-        <div className="flex w-full flex-col">
-            <div className="flex w-full items-center justify-between py-1">
-                <h1>All {text}</h1>
-                <button onClick={() => setIsOpen(!isOpen)} className="px-2 py-1 rounded border-none bg-green-600 text-sm text-white cursor-pointer" type="button">New {text}</button>
+        <div className="flex w-full flex-col ">
+            <div className="flex w-full px-5 items-center justify-between py-1">
+                <h1 className="xl:text-base lg:text-sm text-xs">All {text}s</h1>
+                <button onClick={() => setIsOpen(!isOpen)} className="px-2 py-1 rounded-sm border-none bg-green-600
+                lg:text-sm text-xs text-white cursor-pointer" type="button">New {text}</button>
             </div>
             <hr />
         </div>

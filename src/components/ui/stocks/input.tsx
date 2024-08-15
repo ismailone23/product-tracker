@@ -16,7 +16,7 @@ export default function Input({ type, name, title, color, setFileValue }: {
             <label htmlFor={name} className="text-sm">{title}</label>
             {(type != 'file' && !setFileValue) ? <input type={type} name={name} id={name}
                 className={`outline-none ${color ? color : "border-blue-400 border-2"} w-full rounded-md px-2 py-2 text-sm`} /> :
-                <input onChange={handleFile} type={type} name={name} id={name}
+                <input autoComplete='off' onChange={handleFile} type={type} name={name} id={name}
                     className={`outline-none ${color ? color : "border-blue-400 border-2"} w-full rounded-md px-2 py-2 text-sm`} />
             }
         </div>
