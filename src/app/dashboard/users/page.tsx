@@ -3,6 +3,7 @@ import Displayerror from '@/components/shared/displayerror';
 import DisplayUser from '@/components/ui/user/displayuser';
 import EditUser from '@/components/ui/user/edituser';
 import { api } from '@/trpc/shared'
+import { useSession } from 'next-auth/react';
 import React, { useState } from 'react'
 import Skeleton from 'react-loading-skeleton';
 
@@ -11,6 +12,8 @@ export default function Page() {
     const [message, setMessage] = useState<{ error: boolean, message: string } | null>(null)
     const [id, setId] = useState('')
     const getUserapi = api.user.getUser.useQuery({});
+    const session = useSession().data?.user.email;
+    const checkOwnerapi = api.user.getUser.useQuery({ email: session as string })
     const updateUserapi = api.user.updateUser.useMutation({
         onSuccess: () => {
             setIsOpen(false)
@@ -38,6 +41,7 @@ export default function Page() {
     const handledeleteeuser = (id: string) => {
         deleteUserapi.mutate({ id })
     }
+    if ((checkOwnerapi.isFetched && checkOwnerapi.data) && checkOwnerapi.data[0].role !== "OWNER") return (<p>you are not allowed to come here</p>)
     return (
         <>
             <div className='flex flex-col w-full gap-1 px-4'>
