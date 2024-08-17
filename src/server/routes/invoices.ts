@@ -135,7 +135,7 @@ export const invoiceRouter = createTRPCRouter({
             return newCustomer
         }),
     deleteCustomer: protectedRouter.input(z.string()).mutation(async ({ input: id, ctx: { db } }) => {
-        const res = await db.delete(UserTable).where(eq(UserTable.id, id)).returning()
+        const res = await db.delete(CustomersTable).where(eq(CustomersTable.id, id)).returning()
         if (!res) throw new Error("unable to delete")
         return res
     })
