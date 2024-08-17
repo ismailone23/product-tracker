@@ -12,7 +12,7 @@ export default function Invoicefilter({ setSearchDate }: {
     useEffect(() => {
         const timeOutId = setTimeout(() => setSearchDate({ from: queryDate.from, to: queryDate.to }), 1500);
         return () => clearTimeout(timeOutId);
-    }, [queryDate]);
+    }, [queryDate, setSearchDate]);
     return (
         <div className='flex w-full px-4 flex-col items-start gap-2'>
             <h1>Search Invoice: </h1>
