@@ -16,6 +16,7 @@ export default function Page() {
     const [loading, setLoading] = useState<boolean>(false)
     const formref = useRef<HTMLFormElement | null>(null)
     const allcustomersapi = api.invoice.getCustomer.useQuery({})
+
     const deleteCustomerapi = api.invoice.deleteCustomer.useMutation({
         onSuccess: () => {
             setMessage({ error: false, message: 'deleted user' })
@@ -49,7 +50,7 @@ export default function Page() {
         formref.current?.reset()
     }
     const handledeletecustomer = (id: string) => {
-
+        deleteCustomerapi.mutate(id)
     }
     return (
         <>
