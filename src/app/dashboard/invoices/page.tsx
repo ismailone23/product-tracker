@@ -1,12 +1,15 @@
 'use client'
 
+import Displayerror from '@/components/shared/displayerror'
+import Searchbar from '@/components/shared/searchbar'
 import Sharedtop from '@/components/ui/dashboard/sharedtop'
 import CreateInvoice from '@/components/ui/invoices/create-invoice'
 import Displayinvoice from '@/components/ui/invoices/displayinvoice'
 import Invoicefilter from '@/components/ui/invoices/invoicefilter'
 import { api } from '@/trpc/shared'
 import { invoiceformtype, invoiceIdtype } from '@/types'
-import { FormEvent, useEffect, useRef, useState } from 'react'
+import { FormEvent, useRef, useState } from 'react'
+import Skeleton from 'react-loading-skeleton'
 
 export default function Page() {
     const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -15,7 +18,7 @@ export default function Page() {
     const [searchDate, setSearchDate] = useState<{ from: Date, to: Date }>({ from: new Date(Date.now()), to: new Date(Date.now()) })
     const formref = useRef<HTMLFormElement | null>(null)
     const [purchasedList, setPurchasedList] = useState<invoiceIdtype[] | []>([])
-
+    const [searchText, setSearchText] = useState<string>('')
     const invoiceapi = api.invoice.getInvoice.useQuery({ from: new Date(searchDate.from), to: new Date(searchDate.to) });
 
     const createInvoiceApi = api.invoice.createInvoice.useMutation({
@@ -49,27 +52,50 @@ export default function Page() {
         })
         formref.current?.reset();
     }
+    const deleteInvoiceapi = api.invoice.deleteInvoice.useMutation({
+        onSuccess: () => {
+            invoiceapi.refetch();
+            setLoading(false)
+            setMessage({ error: false, message: "invoice deleted" })
+        },
+        onError: ({ message }) => {
+            setLoading(false)
+            setMessage({ error: true, message })
+
+        }
+    })
+    const handleAction = (id: string, list: string) => {
+        setMessage(null)
+        setLoading(true)
+        deleteInvoiceapi.mutate({ id, list })
+    }
     return (
         <>
             <div className='flex w-full flex-col gap-2 mb-10'>
                 <div className='w-full flex'>
                     <Sharedtop text='Invoice' isOpen={isOpen} setIsOpen={setIsOpen} />
                 </div>
-                <Invoicefilter setSearchDate={setSearchDate} />
+                <div className='flex w-full items-end'>
+                    <Invoicefilter setSearchDate={setSearchDate} />
+                    <Searchbar searchText={searchText} setSearchText={setSearchText} text='Invoice' />
+                </div>
                 <hr />
-                {((invoiceapi.isFetched && invoiceapi.data) && invoiceapi.data.length > 0) && <Displayinvoice invoices={invoiceapi.data} />}
+                {
+                    invoiceapi.isFetching ?
+                        <div className='flex flex-col gap-1 w-full px-4'>
+                            <Skeleton width={300} height={10} count={5} />
+                        </div>
+                        : (invoiceapi.data && (invoiceapi.data.length > 0 ?
+                            <Displayinvoice searchText={searchText} handleAction={handleAction} invoices={invoiceapi.data} /> :
+                            <p className='px-4'>no data</p>
+                        ))
+                }
             </div>
             {
                 isOpen && <CreateInvoice setMessage={setMessage} purchasedList={purchasedList} setPurchasedList={setPurchasedList} setIsOpen={setIsOpen} loading={loading} handleInvoiceForm={handleInvoiceForm} formref={formref} />
             }
-            {
-                message &&
-                <div className="absolute right-10 top-5">
-                    {(message.error === true ? <p onClick={() => setMessage(null)} className='text-center text-sm px-2 py-1 rounded text-white bg-red-400'>{message.message}</p> :
-                        <p onClick={() => setMessage(null)} className='text-center text-sm px-2 py-1 rounded bg-green-500 text-black'>{message.message}</p>
-                    )}
-                </div>
-            }
+            <Displayerror message={message} setMessage={setMessage} />
+
         </>
     )
 }

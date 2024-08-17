@@ -13,8 +13,6 @@ import {
     integer,
     primaryKey
 } from 'drizzle-orm/pg-core'
-import { invoiceIdtype } from '@/types';
-
 
 export const UserRole = pgEnum("userRole", ["OWNER", "ADMIN", "MEMBER"]);
 
@@ -28,13 +26,11 @@ export const UserTable = pgTable("users", {
     createdAt: timestamp("created_at").notNull().defaultNow()
 });
 
-// 
+export type UserTableType = typeof UserTable.$inferSelect
 
 export const usersRelations = relations(UserTable, ({ many }) => ({
     accounts: many(AccountsTable),
 }));
-
-export type User = typeof UserTable.$inferSelect;
 
 export const AccountsTable = pgTable(
     "accounts",
@@ -166,7 +162,7 @@ export const PriceDiscountTable = pgTable("pricediscount", {
 })
 export const ProductPriceDiscountRelation = relations(ProductTable, ({ one }) => {
     return {
-        extra: one(PriceDiscountTable)
+        pricetable: one(PriceDiscountTable)
     }
 })
 export const PriceProductRelation = relations(PriceDiscountTable, ({ one }) => {

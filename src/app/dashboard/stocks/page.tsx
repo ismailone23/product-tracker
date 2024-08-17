@@ -10,6 +10,7 @@ import { handleformtype, ProductTableType } from "@/types";
 import { FormEvent, Suspense, useRef, useState } from "react";
 import Displayskeleton from '@/app/dashboard/stocks/displayskeleton'
 import Searchbar from "@/components/shared/searchbar";
+import Displayerror from "@/components/shared/displayerror";
 
 export default function Page({ searchParams }: { searchParams?: { page?: string } }) {
     const formref = useRef<HTMLFormElement | null>(null)
@@ -126,14 +127,7 @@ export default function Page({ searchParams }: { searchParams?: { page?: string 
                         loading={loading} />
 
                 }
-                {
-                    message &&
-                    <div className="absolute right-10 top-5">
-                        {(message.error === true ? <p onClick={() => setMessage(null)} className='text-center text-sm px-2 py-1 rounded text-white bg-red-400'>{message.message}</p> :
-                            <p onClick={() => setMessage(null)} className='text-center text-sm px-2 py-1 rounded bg-green-500 text-black'>{message.message}</p>
-                        )}
-                    </div>
-                }
+                <Displayerror message={message} setMessage={setMessage} />
             </div>
         </div>
     )

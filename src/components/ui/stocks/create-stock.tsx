@@ -34,7 +34,7 @@ export default function CreatStock({
                         <Input type="number" name="stock" title="Product Quantity" />
                     </div>
                     <Input setFileValue={setFileValue} type="file" name="image" title="Product Image (optional)" color="bg-gray-100" />
-                    {fileValue && <Image priority src={fileValue as string} className='rounded border border-black object-contain' alt="product image" height={150} width={200} />}
+                    {fileValue && <Image priority src={fileValue as string} className='rounded object-contain' alt="product image" height={150} width={200} />}
                     <button disabled={loading}
                         className={`w-full outline-none bg-emerald-700 disabled:bg-emerald-600 disabled:cursor-not-allowed py-1 rounded text-white border-none cursor-pointer`}
                     >{loading ? 'loading...' : 'Add'}</button>

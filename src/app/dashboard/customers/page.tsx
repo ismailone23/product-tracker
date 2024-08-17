@@ -1,9 +1,12 @@
 'use client'
+import Displayerror from '@/components/shared/displayerror'
 import Searchbar from '@/components/shared/searchbar'
 import CreateCustomer from '@/components/ui/customers/create-customer'
+import Displaycustomer from '@/components/ui/customers/displaycustomer'
 import Sharedtop from '@/components/ui/dashboard/sharedtop'
 import { api } from '@/trpc/shared'
 import React, { FormEvent, useRef, useState } from 'react'
+import Skeleton from 'react-loading-skeleton'
 
 
 export default function Page() {
@@ -12,12 +15,25 @@ export default function Page() {
     const [searchText, setSearchText] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const formref = useRef<HTMLFormElement | null>(null)
+    const allcustomersapi = api.invoice.getCustomer.useQuery({})
+    const deleteCustomerapi = api.invoice.deleteCustomer.useMutation({
+        onSuccess: () => {
+            setMessage({ error: false, message: 'deleted user' })
+            setLoading(false)
+            allcustomersapi.refetch()
+        },
+        onError: ({ message }) => {
+            setMessage({ error: true, message })
+            setLoading(false)
+        }
+    })
 
     const createCustomerApi = api.invoice.createCustomer.useMutation({
         onSuccess: () => {
             setMessage({ error: false, message: "customer created" })
             setLoading(false)
             setIsOpen(false)
+            allcustomersapi.refetch()
         },
         onError: ({ message }) => {
             setMessage({ error: true, message })
@@ -32,6 +48,9 @@ export default function Page() {
         createCustomerApi.mutate({ name, phone })
         formref.current?.reset()
     }
+    const handledeletecustomer = (id: string) => {
+
+    }
     return (
         <>
             <div className='flex w-full flex-col gap-2'>
@@ -39,21 +58,22 @@ export default function Page() {
                     <Sharedtop text='Customer' isOpen={isOpen} setIsOpen={setIsOpen} />
                 </div>
                 <Searchbar text='customer' searchText={searchText} setSearchText={setSearchText} />
-                <div>
-
-                </div>
+                {allcustomersapi.isFetching ?
+                    <div className='flex flex-col gap-1 w-full px-4'>
+                        <Skeleton width={400} height={10} count={5} />
+                    </div>
+                    :
+                    allcustomersapi.data && (allcustomersapi.data.length > 0 ?
+                        <Displaycustomer handledeletecustomer={handledeletecustomer} searchText={searchText} customers={allcustomersapi.data} />
+                        :
+                        <p className='px-4'>no customer</p>)
+                }
             </div>
             {
                 isOpen && <CreateCustomer setIsOpen={setIsOpen} loading={loading} handleInvoiceForm={handleInvoiceForm} formref={formref} />
             }
-            {
-                message &&
-                <div className="absolute right-10 top-5">
-                    {(message.error === true ? <p onClick={() => setMessage(null)} className='text-center text-sm px-2 py-1 rounded text-white bg-red-400'>{message.message}</p> :
-                        <p onClick={() => setMessage(null)} className='text-center text-sm px-2 py-1 rounded bg-green-500 text-black'>{message.message}</p>
-                    )}
-                </div>
-            }
+            <Displayerror message={message} setMessage={setMessage} />
+
         </>
     )
 }

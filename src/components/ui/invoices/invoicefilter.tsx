@@ -14,7 +14,7 @@ export default function Invoicefilter({ setSearchDate }: {
         return () => clearTimeout(timeOutId);
     }, [queryDate]);
     return (
-        <div className='flex w-full px-4 items-center gap-2'>
+        <div className='flex w-full px-4 flex-col items-start gap-2'>
             <h1>Search Invoice: </h1>
             <div className='flex items-center gap-2'>
                 <div className='flex items-center gap-1'>

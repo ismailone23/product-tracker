@@ -7,7 +7,7 @@ import {
     DocumentIcon,
     HomeIcon,
     PowerIcon,
-    ShoppingBagIcon,
+    UserIcon,
     UsersIcon
 } from '@heroicons/react/24/solid';
 
@@ -19,8 +19,7 @@ const links = [
     { path: '/dashboard/invoices', name: "Invoices", icon: DocumentIcon, color: 'emerald' },
     { path: '/dashboard/stocks', name: "Stocks", icon: CubeIcon, color: 'indigo' },
     { path: '/dashboard/customers', name: "Customers", icon: UsersIcon, color: 'purple' },
-    { path: '/dashboard/revenue', name: "Revenue", icon: CurrencyDollarIcon, color: 'emerald' },
-    { path: '/dashboard/store', name: "Store", icon: ShoppingBagIcon, color: 'yellow' },
+    { path: '/dashboard/users', name: "User", icon: UserIcon, color: 'teal' },
 ]
 
 export default function Sidebar() {

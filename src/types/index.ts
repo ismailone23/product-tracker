@@ -5,7 +5,7 @@ export type ProductTableType = {
     updatedAt: Date;
     product_name: string;
     price: number,
-    extra?: {
+    pricetable?: {
         id?: string;
         createdAt?: Date;
         updatedAt?: Date;
@@ -49,5 +49,13 @@ export type InvoiceTableType = {
     totalbill: number;
     purchased_list: string
     createdAt: Date;
+    updatedAt: Date;
+}
+
+export type customertype = {
+    id: string;
+    name: string;
+    createdAt: Date;
+    phone: string;
     updatedAt: Date;
 }

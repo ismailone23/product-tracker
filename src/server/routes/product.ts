@@ -28,7 +28,7 @@ export const productRouter = createTRPCRouter({
                 const offset = (page - 1) * pagesize;
                 return await db.query.ProductTable.findMany({
                     with: {
-                        extra: {
+                        pricetable: {
                             columns: {
                                 createdAt: false,
                                 updatedAt: false
@@ -42,7 +42,7 @@ export const productRouter = createTRPCRouter({
             }
             return await db.query.ProductTable.findMany({
                 with: {
-                    extra: {
+                    pricetable: {
                         columns: {
                             createdAt: false,
                             updatedAt: false

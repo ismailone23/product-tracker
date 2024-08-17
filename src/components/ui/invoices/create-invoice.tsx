@@ -47,7 +47,10 @@ export default function CreateInvoice({
             (allProductsApi.isFetched && allProductsApi.data) && selectArray.forEach(list => {
                 setBills(prevBill => ({
                     ...prevBill,
-                    originalbill: allProductsApi.data.filter(product => product.id == list.id)[0].price * list.count + prevBill.originalbill
+                    originalbill: Math.round(allProductsApi.data.filter(product => product.id == list.id)[0].price -
+                        allProductsApi.data.filter(product => product.id == list.id)[0].price *
+                        (Number(allProductsApi.data.filter(product => product.id == list.id)[0].pricetable?.discount) / 100))
+                        * list.count + prevBill.originalbill
                 }))
             })
         }
@@ -104,7 +107,9 @@ export default function CreateInvoice({
                                         setPurchasedList(purchasedList.filter(filterlist => filterlist.id != list.id)),
                                         setBills(prevbil => ({
                                             ...prevbil,
-                                            originalbill: prevbil.originalbill - Number(allProductsApi.data?.filter(data => data.id == list.id)[0].price) * list.count,
+                                            originalbill: Math.round(prevbil.originalbill - Math.round(Number(allProductsApi.data?.filter(product => product.id == list.id)[0].price) -
+                                                Number(allProductsApi.data?.filter(product => product.id == list.id)[0].price) *
+                                                (Number(allProductsApi.data?.filter(product => product.id == list.id)[0].pricetable?.discount) / 100)) * list.count),
                                         })))}
                                         key={i}>{allProductsApi.data?.filter(data => data.id == list.id)[0].product_name} &times; {list.count}
                                     </li>
