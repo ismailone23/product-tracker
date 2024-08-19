@@ -79,6 +79,9 @@ export default function Infomodal({
                     <button onClick={() => setIsCsCopy(!isCsCopy)} className='bg-purple-600 px-2 text-white rounded-sm py-1'>{isCsCopy ? "Customer" : "Shop"} Copy</button>
                     <button onClick={handlePrint} className='bg-emerald-500 px-5 text-white rounded-sm py-1'>Print</button>
                 </div>
+                <div className='flex'>
+                    <p>Developed by <a about='_ismail' href="mailto:ismailhsan45@gmail.com">Ismail Hossain mail:ismailhsan45@gmail.com</a></p>
+                </div>
             </div>
         </div >
     )

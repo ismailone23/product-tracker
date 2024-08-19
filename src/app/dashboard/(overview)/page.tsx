@@ -41,9 +41,6 @@ export default function Page() {
                     <h1>Customers</h1>
                     <Link href={'/dashboard/customers'} className='w-6 h-6 flex items-center rounded-sm justify-center bg-gray-100'><ChevronRightIcon className='w-4' /></Link>
                 </div>
-                <div>
-
-                </div>
             </div>
         </div>
     )
