@@ -30,7 +30,7 @@ export default function CreatStock({
                         <Input type="number" name="stock" title="Product Quantity" />
                     </div>
                     <div className="w-full flex gap-2">
-                        <Input type="number" name="price" title="Product Price" />
+                        <Input type="number" name="price" title="MRP" />
                         <Input type="number" name="discount" title="Discount" />
                     </div>
                     <Input setFileValue={setFileValue} type="file" name="image" title="Product Image (optional)" color="bg-gray-100" />
