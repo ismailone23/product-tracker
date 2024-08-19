@@ -28,17 +28,23 @@ export default function Page({ searchParams }: { searchParams?: { page?: string 
     const createStockapi = api.product.createStock.useMutation({
         onSuccess: () => {
             allProductsApi.refetch();
+            setLoading(false)
+            setIsOpen(false)
             setMessage({ error: false, message: "uploaded stock successfully" })
         },
         onError: ({ message }) => {
+            setLoading(false)
             setMessage({ error: true, message })
         }
     })
     const updateProductApi = api.product.updateProduct.useMutation({
         onSuccess: () => {
             allProductsApi.refetch()
+            setIsUpdateOpen(false)
+            setLoading(false)
         },
         onError: ({ message }) => {
+            setLoading(false)
             setMessage({ error: true, message })
         }
     })
@@ -56,8 +62,6 @@ export default function Page({ searchParams }: { searchParams?: { page?: string 
         let data = await handleFormForStock(formref, setMessage).then(data => data) as handleformtype
         createStockapi.mutate({ ...data })
         formref.current?.reset()
-        setLoading(false)
-        setIsOpen(false)
     }
     const handleupdateProductForm = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -65,8 +69,6 @@ export default function Page({ searchParams }: { searchParams?: { page?: string 
         let data = await handleUpdateStockForm(upformref, setMessage, allProducts, id).then(data => data) as handleformtype
         updateProductApi.mutate({ ...data })
         formref.current?.reset()
-        setIsUpdateOpen(false)
-        setLoading(false)
     }
     const handleDel = (id: string) => {
         setLoading(true)

@@ -12,9 +12,8 @@ export default function Sinvoice({ invoice, i, handleAction }: { invoice: Invoic
     const [isModalOpen, setIsModalOpen] = useState(false)
     const handleInfoModal = (id: string) => {
         setIsModalOpen(true)
-        console.log(id);
-
     }
+
     return (
         <>
             <div className='w-full items-center grid border-b px-1 py-1 grid-cols-10' key={invoice.id}>

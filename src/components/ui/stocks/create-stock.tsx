@@ -27,11 +27,11 @@ export default function CreatStock({
                     <Input type="text" name="product_name" title="Product Name" />
                     <div className="w-full flex gap-2">
                         <Input type="number" name="originalPrice" title="Original Price" />
-                        <Input type="number" name="discount" title="Discount" />
+                        <Input type="number" name="stock" title="Product Quantity" />
                     </div>
                     <div className="w-full flex gap-2">
                         <Input type="number" name="price" title="Product Price" />
-                        <Input type="number" name="stock" title="Product Quantity" />
+                        <Input type="number" name="discount" title="Discount" />
                     </div>
                     <Input setFileValue={setFileValue} type="file" name="image" title="Product Image (optional)" color="bg-gray-100" />
                     {fileValue && <Image priority src={fileValue as string} className='rounded object-contain' alt="product image" height={150} width={200} />}
