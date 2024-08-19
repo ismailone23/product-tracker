@@ -17,10 +17,10 @@ export default function DisplayUser({
     handledeleteeuser: (id: string) => void
 }) {
     return (
-        <div className='w-full grid grid-cols-5'>
+        <div className='w-full grid grid-cols-7'>
             <h1>{i + 1}</h1>
             <h1>{user.name}</h1>
-            <h1>{user.email}</h1>
+            <h1 className='col-span-3'>{user.email}</h1>
             <h1 className='text-sm'>{user.role}</h1>
             <div className='flex gap-2'>
                 <button disabled={user.role === "OWNER"} onClick={() => { setIsOpen(true); setId(user.id) }}><PencilSquareIcon className={` w-4 ${user.role === "OWNER" ? " cursor-not-allowed" : " cursor-pointer "} outline-none`} /></button>

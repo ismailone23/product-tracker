@@ -45,10 +45,10 @@ export default function Page() {
     return (
         <>
             <div className='flex flex-col w-full gap-1 px-4'>
-                <div className='w-full grid grid-cols-5 py-1 items-center border-b border-gray-200'>
+                <div className='w-full grid grid-cols-7 py-1 items-center border-b border-gray-200'>
                     <h1>sl.no</h1>
                     <h1>Name</h1>
-                    <h1>Email</h1>
+                    <h1 className='col-span-3'>Email</h1>
                     <h1>Role</h1>
                     <h1>Action</h1>
                 </div>
