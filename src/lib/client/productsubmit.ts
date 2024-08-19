@@ -54,7 +54,7 @@ export const handleUpdateStockForm = async (
 ) => {
     setMessage(null)
     const formData = new FormData(formref.current as HTMLFormElement)
-    const { price, stock, product_name, originalPrice, discount } = Object.fromEntries(formData)
+    const { price, add_stock, stock, product_name, originalPrice, discount } = Object.fromEntries(formData)
     const imagefile = formData.get("image") as File
     const product = allProducts.filter(product => product.id === id)[0]
     if (imagefile.size > 0) {
@@ -66,7 +66,8 @@ export const handleUpdateStockForm = async (
             return {
                 id,
                 price: Number(price),
-                stock: Number(stock),
+                stock: Number(stock) + Number(add_stock),
+                add_stock: Number(add_stock),
                 image: imgUrl as string,
                 discount: Number(discount),
                 originalPrice: Number(originalPrice),
@@ -81,7 +82,8 @@ export const handleUpdateStockForm = async (
             id,
             image: product.image,
             price: Number(price),
-            stock: Number(stock),
+            stock: Number(stock) + Number(add_stock),
+            add_stock: Number(add_stock),
             discount: Number(discount),
             product_name: product_name as string,
             originalPrice: Number(originalPrice),

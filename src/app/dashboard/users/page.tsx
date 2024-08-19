@@ -34,7 +34,7 @@ export default function Page() {
         }
     });
 
-    const handleupdateuserfunc = (val: "ADMIN" | "BASIC" | "MEMBER" | string) => {
+    const handleupdateuserfunc = (val: "ADMIN" | "OWNER" | "MEMBER" | string) => {
         if (val === 'role') return setMessage({ error: true, message: "select role correctly" })
         updateUserapi.mutate({ id, role: val })
     }

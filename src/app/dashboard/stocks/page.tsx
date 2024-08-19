@@ -68,42 +68,35 @@ export default function Page({ searchParams }: { searchParams?: { page?: string 
         setIsUpdateOpen(false)
         setLoading(false)
     }
-    const handleIncDec = (type: "inc" | "dec" | "del", id: string, stock: ProductTableType) => {
+    const handleDel = (id: string) => {
         setLoading(true)
-        if (type === 'inc') {
-            updateProductApi.mutate({ ...stock, updatedAt: new Date(Date.now()), stock: stock.stock + 1 })
-        }
-        else if (type === 'dec') {
-            if (stock.stock === 0) return setMessage({ error: true, message: "stock cannot be negative" })
-            updateProductApi.mutate({ ...stock, updatedAt: new Date(Date.now()), stock: stock.stock - 1 })
-        }
-        else {
-            if (confirm("do you want to delete it for sure ? ")) { deleteProductApi.mutate({ id }) }
-        }
+        if (confirm("do you want to delete it for sure ? ")) { deleteProductApi.mutate({ id }) }
         setLoading(false)
     }
     return (
         <div className="w-full h-full overflow-y-auto flex items-center flex-col">
             <div className="w-full flex flex-col items-center h-full overflow-auto gap-2">
-                <Sharedtop isOpen={isOpen} setIsOpen={setIsOpen} text="Stock" />
-                <Searchbar searchText={searchText} setSearchText={setSearchText} text="product" />
-                <div className="w-full flex px-4 flex-col">
-                    {allProductsApi.isFetching ?
-                        <Suspense fallback={<p>loading....</p>}>
-                            <div className="flex flex-col gap-2">
-                                <Displayskeleton />
-                                <Displayskeleton />
-                            </div>
-                        </Suspense>
-                        :
-                        allProducts && (
-                            allProducts.length > 0 ?
-                                <Displays loading={loading} setId={setId} searchText={searchText} products={allProducts}
-                                    handleIncDec={handleIncDec} isUpdateOpen={isUpdateOpen}
-                                    setIsUpdateOpen={setIsUpdateOpen} />
-                                :
-                                <p className="italic">No Data</p>)
-                    }
+                <div className="w-full flex flex-col items-center h-full overflow-hidden gap-2">
+                    <Sharedtop isOpen={isOpen} setIsOpen={setIsOpen} text="Stock" />
+                    <Searchbar searchText={searchText} setSearchText={setSearchText} text="product" />
+                    <div className="w-full flex px-4 flex-col h-auto overflow-y-auto">
+                        {allProductsApi.isFetching ?
+                            <Suspense fallback={<p>loading....</p>}>
+                                <div className="flex flex-col gap-2">
+                                    <Displayskeleton />
+                                    <Displayskeleton />
+                                </div>
+                            </Suspense>
+                            :
+                            allProducts && (
+                                allProducts.length > 0 ?
+                                    <Displays loading={loading} setId={setId} searchText={searchText} products={allProducts}
+                                        handleDel={handleDel} isUpdateOpen={isUpdateOpen}
+                                        setIsUpdateOpen={setIsUpdateOpen} />
+                                    :
+                                    <p className="italic">No Data</p>)
+                        }
+                    </div>
                 </div>
                 {
                     isOpen &&

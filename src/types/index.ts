@@ -5,14 +5,16 @@ export type ProductTableType = {
     updatedAt: Date;
     product_name: string;
     price: number,
-    pricetable?: {
+    pricetable: {
         id?: string;
         createdAt?: Date;
         updatedAt?: Date;
         productId: string;
         originalPrice: number,
         discount: number,
-    } | null
+    };
+    isdeleted: boolean;
+    stockdetails: stockTrack;
     stock: number;
 }
 export type handleformtype = {
@@ -20,6 +22,7 @@ export type handleformtype = {
     stock: number;
     image: string;
     createdAt: Date;
+    add_stock: number;
     updatedAt: Date;
     originalPrice: number,
     product_name: string;
@@ -59,3 +62,9 @@ export type customertype = {
     phone: string;
     updatedAt: Date;
 }
+export type stockTrack = {
+    id: string;
+    productId: string;
+    details: string,
+}
+export type trackType = { quantity: number, createdat: Date }

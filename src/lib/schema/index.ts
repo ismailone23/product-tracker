@@ -11,7 +11,8 @@ import {
     varchar,
     real,
     integer,
-    primaryKey
+    primaryKey,
+    boolean
 } from 'drizzle-orm/pg-core'
 
 export const UserRole = pgEnum("userRole", ["OWNER", "ADMIN", "MEMBER"]);
@@ -149,6 +150,7 @@ export const ProductTable = pgTable("products", {
     price: real("price").notNull(),
     stock: real("stock").notNull(),
     image: text("image").notNull(),
+    isdeleted: boolean('is_deleted').notNull().default(false),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow()
 })
@@ -160,9 +162,16 @@ export const PriceDiscountTable = pgTable("pricediscount", {
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow()
 })
+
+export const StockTraceTable = pgTable("stocktrace", {
+    id: uuid("id").notNull().primaryKey().defaultRandom(),
+    productId: uuid('product_id').notNull().references(() => ProductTable.id),
+    details: text("details").notNull()
+})
 export const ProductPriceDiscountRelation = relations(ProductTable, ({ one }) => {
     return {
-        pricetable: one(PriceDiscountTable)
+        pricetable: one(PriceDiscountTable),
+        stockdetails: one(StockTraceTable)
     }
 })
 export const PriceProductRelation = relations(PriceDiscountTable, ({ one }) => {
@@ -173,5 +182,14 @@ export const PriceProductRelation = relations(PriceDiscountTable, ({ one }) => {
                 references: [ProductTable.id]
             }
         )
+    }
+})
+
+export const StockTraceTableRelation = relations(StockTraceTable, ({ one }) => {
+    return {
+        product: one(ProductTable, {
+            fields: [StockTraceTable.productId],
+            references: [ProductTable.id]
+        })
     }
 })

@@ -56,8 +56,14 @@ export default function EditStock({
                             <input className='outline-none border border-gray-100 rounded py-1 px-2' type="number" name="price" id="cellPrice" defaultValue={product?.price} />
                         </div>
                         <div className='flex flex-col'>
-                            <label htmlFor="stock">Stock</label>
-                            <input className='outline-none border border-gray-100 rounded py-1 px-2' type="number" name="stock" id="stock" defaultValue={product?.stock} />
+                            <label htmlFor="add_stock">Add Stock</label>
+                            <input className='outline-none border border-gray-100 rounded py-1 px-2' type="number" name="add_stock" id="add_stock" defaultValue={0} />
+                        </div>
+                    </div>
+                    <div>
+                        <div className='flex flex-col'>
+                            <label htmlFor="stock">Total Stock</label>
+                            <input readOnly className='outline-none border border-gray-100 rounded py-1 px-2' type="number" name="stock" id="stock" defaultValue={product?.stock} />
                         </div>
                     </div>
                     <div className='flex flex-col w-full'>
@@ -84,7 +90,8 @@ export default function EditStock({
                                     sizes="100vw" />
                         )
                     }
-                    <button disabled={loading}
+                    <button
+                        disabled={loading}
                         className={`w-full outline-none bg-blue-500 disabled:bg-blue-300 disabled:cursor-not-allowed py-1 rounded text-white border-none cursor-pointer`}
                     >{loading ? 'loading...' : 'Update'}</button>
                 </div>

@@ -1,6 +1,6 @@
 'use client'
 import { api } from '@/trpc/shared';
-import { invoiceIdtype, InvoiceTableType } from '@/types';
+import { invoiceIdtype, InvoiceTableType, ProductTableType } from '@/types';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Dispatch, SetStateAction, useState, useRef } from 'react'
 import { useReactToPrint } from 'react-to-print';
@@ -22,7 +22,7 @@ export default function Infomodal({
     if ((productapi.isFetched && productapi.data) && (customerapi.isFetched && customerapi.data)) {
 
         for (let i = 0; i < purchased_list.length; i++) {
-            const filterdProduct = productapi.data.filter(data => data.id == purchased_list[i].id)[0]
+            const filterdProduct = productapi.data.filter(data => data.id == purchased_list[i].id)[0] as ProductTableType
             purchased_products.push({
                 ...filterdProduct,
                 count: purchased_list[i].count
@@ -45,7 +45,7 @@ export default function Infomodal({
                         <h1 className='w-full'>Invoice Id : <span className='text-sm'>{invoice.id}</span></h1>
                         <h1 className='w-full'>Customer name : <span className='text-sm'>{customerapi.data[0].name}</span></h1>
                         <h1 className='w-full'>Customer Phone Number : <span className='text-sm'>{customerapi.data[0].phone}</span></h1>
-                        <h1>Date : {invoice.createdAt.getHours()}:{invoice.createdAt.getMinutes()} {invoice.createdAt.getDate()}/{invoice.createdAt.getMonth()}/{invoice.createdAt.getFullYear()}</h1>
+                        <h1>Date : {invoice.createdAt.getHours()}:{invoice.createdAt.getMinutes()} {invoice.createdAt.getDate()}/{invoice.createdAt.getMonth() + 1}/{invoice.createdAt.getFullYear()}</h1>
                     </div>
                 }
                 <table className='w-full border border-gray-100 overflow-hidden'>

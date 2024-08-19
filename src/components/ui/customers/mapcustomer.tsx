@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { api } from '@/trpc/shared'
 import { customertype } from '@/types'
 import { TrashIcon } from '@heroicons/react/24/solid';

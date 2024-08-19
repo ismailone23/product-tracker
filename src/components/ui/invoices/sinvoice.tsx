@@ -1,6 +1,6 @@
 'use client'
 import { api } from '@/trpc/shared'
-import { InvoiceTableType } from '@/types'
+import { InvoiceTableType, ProductTableType } from '@/types'
 import { TrashIcon } from '@heroicons/react/24/solid';
 import React, { useState } from 'react'
 import Calculate from './calculate';
@@ -25,7 +25,7 @@ export default function Sinvoice({ invoice, i, handleAction }: { invoice: Invoic
                 <div className='col-span-2'>
                     {
                         productapi.data &&
-                        <Calculate invoice={invoice} products={productapi.data} />
+                        <Calculate invoice={invoice} products={productapi.data as ProductTableType[]} />
                     }
                 </div>
                 <div className='flex items-center gap-2'>
@@ -40,12 +40,3 @@ export default function Sinvoice({ invoice, i, handleAction }: { invoice: Invoic
 
     )
 }
-
-{/* 
-{(
-                    JSON.parse(invoice.purchased_list) as invoiceIdtype[]).map((list, i) =>
-{productapi.data?.filter(data => data.id == list.id)[0].product_name} &times;
-                            <span>{list.count}</span>
-                            <span>({productapi.data?.filter(data => data.id == list.id)[0].pricetable?.originalPrice})</span>
-)}
-*/}
