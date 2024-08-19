@@ -30,6 +30,7 @@ export default function Page({ searchParams }: { searchParams?: { page?: string 
             allProductsApi.refetch();
             setLoading(false)
             setIsOpen(false)
+            formref.current?.reset()
             setMessage({ error: false, message: "uploaded stock successfully" })
         },
         onError: ({ message }) => {
@@ -41,6 +42,7 @@ export default function Page({ searchParams }: { searchParams?: { page?: string 
         onSuccess: () => {
             allProductsApi.refetch()
             setIsUpdateOpen(false)
+            formref.current?.reset()
             setLoading(false)
         },
         onError: ({ message }) => {
@@ -61,14 +63,12 @@ export default function Page({ searchParams }: { searchParams?: { page?: string 
         setLoading(true)
         let data = await handleFormForStock(formref, setMessage).then(data => data) as handleformtype
         createStockapi.mutate({ ...data })
-        formref.current?.reset()
     }
     const handleupdateProductForm = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true)
         let data = await handleUpdateStockForm(upformref, setMessage, allProducts, id).then(data => data) as handleformtype
         updateProductApi.mutate({ ...data })
-        formref.current?.reset()
     }
     const handleDel = (id: string) => {
         setLoading(true)
