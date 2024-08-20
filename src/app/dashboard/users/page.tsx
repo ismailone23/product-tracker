@@ -11,9 +11,9 @@ export default function Page() {
     const [isOpen, setIsOpen] = useState(false)
     const [message, setMessage] = useState<{ error: boolean, message: string } | null>(null)
     const [id, setId] = useState('')
-    const getUserapi = api.user.getUser.useQuery({});
+    const getUserapi = api.user.getUser.useQuery({}, { refetchOnMount: false });
     const session = useSession().data?.user.email;
-    const checkOwnerapi = api.user.getUser.useQuery({ email: session as string })
+    const checkOwnerapi = api.user.getUser.useQuery({ email: session as string }, { refetchOnMount: false })
     const updateUserapi = api.user.updateUser.useMutation({
         onSuccess: () => {
             setIsOpen(false)
@@ -53,11 +53,11 @@ export default function Page() {
                     <h1>Action</h1>
                 </div>
                 {
-                    (getUserapi.isFetched && getUserapi.data) ? getUserapi.data.map((user, i) =>
+                    (getUserapi.data) ? getUserapi.data.map((user, i) =>
                         <DisplayUser handledeleteeuser={handledeleteeuser} setIsOpen={setIsOpen} setId={setId} i={i} user={user} key={i} />
                     )
                         :
-                        <Skeleton count={2} width={300} height={10} />
+                        <p>no data</p>
                 }
             </div>
             {

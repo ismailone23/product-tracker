@@ -106,12 +106,13 @@ export const VerificationTokensRelations = relations(
 export const CustomersTable = pgTable('customers', {
     id: uuid("id").primaryKey().notNull().defaultRandom(),
     name: varchar("name").notNull(),
+    dealerId: varchar("dealer_id").notNull().unique(),
     phone: varchar("phone").notNull().unique(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow()
 }, table => {
     return {
-        phoneIndex: uniqueIndex("phoneIndex").on(table.phone),
+        phoneIndex: uniqueIndex("phoneIndex").on(table.phone, table.dealerId),
     }
 })
 
@@ -119,7 +120,7 @@ export type CustomersTableType = typeof CustomersTable;
 
 export const InvoiceTable = pgTable("invoices", {
     id: uuid('id').primaryKey().notNull().defaultRandom(),
-    customerId: uuid("customer_id").references(() => CustomersTable.id).notNull(),
+    customerId: uuid("customer_id").references(() => CustomersTable.id, { onDelete: 'cascade' }).notNull(),
     purchased_list: text("purchased_list").notNull(),
     totalbill: real("total_bill").notNull(),
     originalbill: real("original_bill").notNull(),

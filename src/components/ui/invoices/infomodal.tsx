@@ -13,13 +13,12 @@ export default function Infomodal({
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     invoice: InvoiceTableType
 }) {
-    const productapi = api.product.getProduct.useQuery({})
-    const customerapi = api.invoice.getCustomer.useQuery({ id: invoice.customerId })
+    const productapi = api.product.getProduct.useQuery({}, { refetchOnMount: false })
     const purchased_list = (JSON.parse(invoice.purchased_list) as invoiceIdtype[])
     let purchased_products = []
     let price = 0;
     const [isCsCopy, setIsCsCopy] = useState(false)
-    if ((productapi.isFetched && productapi.data) && (customerapi.isFetched && customerapi.data)) {
+    if (productapi.isFetched && productapi.data) {
 
         for (let i = 0; i < purchased_list.length; i++) {
             const filterdProduct = productapi.data.filter(data => data.id == purchased_list[i].id)[0] as ProductTableType
@@ -41,10 +40,10 @@ export default function Infomodal({
             <div ref={componentRef} className="relative gap-2 items-end flex flex-col max-w-screen-lg w-full min-h-24 rounded-sm bg-white p-2">
                 <button className='absolute right-2 top-2' onClick={() => setIsModalOpen(false)}><XMarkIcon className='w-5' /></button>
                 {
-                    customerapi.data && <div className='flex w-full flex-col'>
-                        <h1 className='w-full'>Invoice Id : <span className='text-sm'>{invoice.id}</span></h1>
-                        <h1 className='w-full'>Customer name : <span className='text-sm'>{customerapi.data[0].name}</span></h1>
-                        <h1 className='w-full'>Customer Phone Number : <span className='text-sm'>{customerapi.data[0].phone}</span></h1>
+                    <div className='flex w-full flex-col'>
+                        <h1 className='w-full'>Dealer Code : <span className='text-sm'>{invoice.customer?.dealerId}</span></h1>
+                        <h1 className='w-full'>Customer name : <span className='text-sm'>{invoice.customer?.name}</span></h1>
+                        <h1 className='w-full'>Customer Phone Number : <span className='text-sm'>{invoice.customer?.phone}</span></h1>
                         <h1>Date : {invoice.createdAt.getHours()}:{invoice.createdAt.getMinutes()} {invoice.createdAt.getDate()}/{invoice.createdAt.getMonth() + 1}/{invoice.createdAt.getFullYear()}</h1>
                     </div>
                 }
@@ -80,7 +79,7 @@ export default function Infomodal({
                     <button onClick={handlePrint} className='bg-emerald-500 px-5 text-white rounded-sm py-1'>Print</button>
                 </div>
                 <div className='flex'>
-                    <p>Developed by <a about='_ismail' href="mailto:ismailhsan45@gmail.com">Ismail Hossain mail:ismailhsan45@gmail.com</a></p>
+                    <p>Developed by <a about='_ismail' href="mailto:ismailhsan45@gmail.com">Ismail Hossain email : ismailhsan45@gmail.com</a></p>
                 </div>
             </div>
         </div >

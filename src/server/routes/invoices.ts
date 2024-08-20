@@ -20,12 +20,14 @@ export const invoiceRouter = createTRPCRouter({
                     return await db.query.InvoiceTable.findMany({
                         where: and(gt(InvoiceTable.createdAt, from),
                             lt(InvoiceTable.createdAt, to)), orderBy: desc(InvoiceTable.createdAt),
+                        with: { customer: true }
                     })
                 }
                 else {
                     return await db.query.InvoiceTable.findMany({
                         where: or(lt(InvoiceTable.createdAt, from),
-                            gt(InvoiceTable.createdAt, to)), orderBy: desc(InvoiceTable.createdAt)
+                            gt(InvoiceTable.createdAt, to)), orderBy: desc(InvoiceTable.createdAt),
+                        with: { customer: true }
                     })
                 }
             }
@@ -33,32 +35,31 @@ export const invoiceRouter = createTRPCRouter({
                 return await db.query.InvoiceTable.findMany({
                     where: eq(InvoiceTable.customerId, customerid),
                     orderBy: desc(InvoiceTable.createdAt),
+                    with: { customer: true }
                 })
             } else {
-                return await db.query.InvoiceTable.findMany({ orderBy: desc(InvoiceTable.createdAt) })
+                return await db.query.InvoiceTable.findMany({ orderBy: desc(InvoiceTable.createdAt), with: { customer: true } })
             }
 
         }),
     createInvoice: protectedRouter
         .input(
             z.object({
-                name: z.string(),
-                phone: z.string(),
                 purchased_list: z.string(),
                 totalbill: z.number(),
                 extradiscount: z.number(),
                 tax: z.number(),
-                originalbill: z.number()
+                originalbill: z.number(),
+                id: z.string()
             }))
         .mutation(async ({ input:
             {
-                name,
-                phone,
                 purchased_list,
                 totalbill,
                 extradiscount,
                 tax,
-                originalbill
+                originalbill,
+                id
             },
             ctx: { db } }) => {
 
@@ -68,18 +69,10 @@ export const invoiceRouter = createTRPCRouter({
                 .set({
                     stock: productlist.filter(plist => plist.id == list.id)[0].stock - list.count
                 }).where(eq(ProductTable.id, list.id)))
-            const newCustomer = await db.insert(CustomersTable).values({ name, phone })
-                .onConflictDoUpdate({
-                    set: {
-                        name,
-                        updatedAt: new Date(Date.now())
-                    },
-                    target: CustomersTable.phone
-                }).returning({ id: CustomersTable.id })
-            if (!newCustomer) throw new Error("unable to create customers")
-
+            const customer = await db.query.CustomersTable.findFirst({ where: eq(CustomersTable.dealerId, id), columns: { id: true } })
+            if (!customer) throw new Error("dealer not found")
             const newInvoice = await db.insert(InvoiceTable).values({
-                customerId: newCustomer[0].id,
+                customerId: customer.id,
                 purchased_list,
                 totalbill,
                 extradiscount,
@@ -99,16 +92,16 @@ export const invoiceRouter = createTRPCRouter({
     getCustomer: protectedRouter
         .input(z.object({
             phone: z.string().optional(),
-            id: z.string().optional()
+            dealerId: z.string().optional()
         }))
-        .query(async ({ input: { phone, id }, ctx: { db } }) => {
+        .query(async ({ input: { phone, dealerId }, ctx: { db } }) => {
             if (phone) {
                 const customer = await db.select().from(CustomersTable).where(eq(CustomersTable.phone, phone))
                 if (!customer) throw new Error("customer not found")
                 return customer
             }
-            else if (id) {
-                const customer = await db.select().from(CustomersTable).where(eq(CustomersTable.id, id))
+            else if (dealerId) {
+                const customer = await db.select().from(CustomersTable).where(eq(CustomersTable.dealerId, dealerId))
                 if (!customer) throw new Error("customer not found")
                 return customer
             } else {
@@ -123,7 +116,8 @@ export const invoiceRouter = createTRPCRouter({
         phone: z.string()
     })).
         mutation(async ({ input: { name, phone }, ctx: { db } }) => {
-            const newCustomer = await db.insert(CustomersTable).values({ name, phone })
+            let dealercode = '2401' + String(Math.random()).split('.')[1].slice(0, 7)
+            const newCustomer = await db.insert(CustomersTable).values({ name, phone, dealerId: dealercode })
                 .onConflictDoUpdate({
                     set: {
                         name,

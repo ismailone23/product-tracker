@@ -17,7 +17,7 @@ export default function Page({ searchParams }: { searchParams?: { page?: string 
     const upformref = useRef<HTMLFormElement | null>(null)
     const [searchText, setSearchText] = useState<string>('')
     const pagen = Number(searchParams?.page) || 1;
-    const allProductsApi = api.product.getProduct.useQuery({ page: pagen, pagesize: 6 });
+    const allProductsApi = api.product.getProduct.useQuery({ page: pagen, pagesize: 6 }, { refetchOnMount: false });
     const allProducts = allProductsApi.data as ProductTableType[]
     const [loading, setLoading] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -83,12 +83,7 @@ export default function Page({ searchParams }: { searchParams?: { page?: string 
                     <Searchbar searchText={searchText} setSearchText={setSearchText} text="product" />
                     <div className="w-full flex px-4 flex-col h-auto overflow-y-auto">
                         {allProductsApi.isFetching ?
-                            <Suspense fallback={<p>loading....</p>}>
-                                <div className="flex flex-col gap-2">
-                                    <Displayskeleton />
-                                    <Displayskeleton />
-                                </div>
-                            </Suspense>
+                            <Displayskeleton />
                             :
                             allProducts && (
                                 allProducts.length > 0 ?

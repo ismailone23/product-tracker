@@ -19,7 +19,7 @@ export default function Page() {
     const formref = useRef<HTMLFormElement | null>(null)
     const [purchasedList, setPurchasedList] = useState<invoiceIdtype[] | []>([])
     const [searchText, setSearchText] = useState<string>('')
-    const invoiceapi = api.invoice.getInvoice.useQuery({ from: new Date(searchDate.from), to: new Date(searchDate.to) });
+    const invoiceapi = api.invoice.getInvoice.useQuery({ from: new Date(searchDate.from), to: new Date(searchDate.to) }, { refetchOnMount: false });
 
     const createInvoiceApi = api.invoice.createInvoice.useMutation({
         onSuccess: () => {
@@ -40,10 +40,9 @@ export default function Page() {
         setLoading(true);
         setMessage(null);
         const formData = new FormData(formref.current as HTMLFormElement)
-        const { name, phone, originalbill, extradiscount, tax, totalbill } = Object.fromEntries(formData) as invoiceformtype;
+        const { id, originalbill, extradiscount, tax, totalbill } = Object.fromEntries(formData) as invoiceformtype;
         createInvoiceApi.mutate({
-            name,
-            phone,
+            id,
             tax: Number(tax),
             totalbill: Number(totalbill),
             originalbill: Number(originalbill),
@@ -85,10 +84,9 @@ export default function Page() {
                         <div className='flex flex-col gap-1 w-full px-4'>
                             <Skeleton width={300} height={10} count={5} />
                         </div>
-                        : (invoiceapi.data && (invoiceapi.data.length > 0 ?
-                            <Displayinvoice searchText={searchText} handleAction={handleAction} invoices={invoiceapi.data} /> :
-                            <p className='px-4'>no data</p>
-                        ))
+                        : (invoiceapi.data &&
+                            <Displayinvoice searchText={searchText} handleAction={handleAction} invoices={invoiceapi.data} />
+                        )
                 }
             </div>
             {

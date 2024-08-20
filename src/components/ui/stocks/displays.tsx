@@ -22,7 +22,7 @@ export default function Displays({
     searchText: string,
     setId: Dispatch<SetStateAction<string>>
 }) {
-    const totalPages = api.product.fetchProductPages.useQuery(6)
+    const totalPages = api.product.fetchProductPages.useQuery(6, { refetchOnMount: false })
     return (
         <div className="flex w-full flex-col py-2 lg:gap-2 gap-1 overflow-y-auto mb-12">
             {products && products

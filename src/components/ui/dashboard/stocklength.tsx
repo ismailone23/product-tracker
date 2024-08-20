@@ -2,7 +2,7 @@ import { api } from '@/trpc/shared'
 import React from 'react'
 
 export default function Stocklength() {
-    const productapi = api.product.getProduct.useQuery({})
+    const productapi = api.product.getProduct.useQuery({}, { refetchOnMount: false })
     let stock = 0;
     if ((productapi.isFetched && productapi.data) && productapi.data.length > 0) {
         for (let i = 0; i < productapi.data.length; i++) {

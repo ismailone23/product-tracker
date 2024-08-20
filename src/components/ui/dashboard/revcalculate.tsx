@@ -6,8 +6,8 @@ export default function Revcalculate() {
   let investamountinsells = 0;
   let totalamountinsells = 0;
   let revenue = 0;
-  const invoiceapi = api.invoice.getInvoice.useQuery({})
-  const productseapi = api.product.getProduct.useQuery({})
+  const invoiceapi = api.invoice.getInvoice.useQuery({}, { refetchOnMount: false })
+  const productseapi = api.product.getProduct.useQuery({}, { refetchOnMount: false })
 
   if (((invoiceapi.isFetched && productseapi.isFetched)
     && (invoiceapi.data && productseapi.data)) &&

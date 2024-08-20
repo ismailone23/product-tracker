@@ -1,1 +1,0 @@
-ALTER TABLE "stocktrace" DROP COLUMN IF EXISTS "created_at";

@@ -15,7 +15,7 @@ export default function Page() {
     const [searchText, setSearchText] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const formref = useRef<HTMLFormElement | null>(null)
-    const allcustomersapi = api.invoice.getCustomer.useQuery({})
+    const allcustomersapi = api.invoice.getCustomer.useQuery({}, { refetchOnMount: false })
 
     const deleteCustomerapi = api.invoice.deleteCustomer.useMutation({
         onSuccess: () => {

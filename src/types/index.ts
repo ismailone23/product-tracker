@@ -35,9 +35,7 @@ export type invoiceIdtype = {
     count: number
 }
 export type invoiceformtype = {
-    id?: string;
-    name: string;
-    phone: string;
+    id: string;
     originalbill: string;
     extradiscount: string;
     tax: string;
@@ -51,12 +49,14 @@ export type InvoiceTableType = {
     tax: number;
     totalbill: number;
     purchased_list: string
+    customer?: customertype
     createdAt: Date;
     updatedAt: Date;
 }
 
 export type customertype = {
     id: string;
+    dealerId: string;
     name: string;
     createdAt: Date;
     phone: string;

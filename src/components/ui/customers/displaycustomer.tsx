@@ -14,9 +14,10 @@ export default function Displaycustomer({
 
     return (
         <div className='flex w-full flex-col gap-2 px-4'>
-            <div className='grid grid-cols-4 w-full border-b border-gray-200 py-1'>
+            <div className='grid grid-cols-5 w-full border-b border-gray-200 py-1'>
                 <h1>Name</h1>
                 <h1>Phone</h1>
+                <h1>Dealer Code</h1>
                 <h1>Total purchased</h1>
                 <h1>Action</h1>
             </div>

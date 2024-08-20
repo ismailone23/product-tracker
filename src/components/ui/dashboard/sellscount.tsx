@@ -3,7 +3,7 @@ import { invoiceIdtype } from '@/types';
 import React from 'react'
 
 export default function Sellscount() {
-    const invoiceapi = api.invoice.getInvoice.useQuery({})
+    const invoiceapi = api.invoice.getInvoice.useQuery({}, { refetchOnMount: false })
     let count = 0;
     if ((invoiceapi.isFetched && invoiceapi.data) && invoiceapi.data.length > 0) {
         for (let i = 0; i < invoiceapi.data.length; i++) {

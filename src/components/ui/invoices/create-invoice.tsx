@@ -1,5 +1,6 @@
 import { api } from '@/trpc/shared'
 import { invoiceIdtype } from '@/types';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import React, { ChangeEvent, Dispatch, FormEvent, MutableRefObject, SetStateAction, useEffect, useState } from 'react'
 
 export default function CreateInvoice({
@@ -29,7 +30,10 @@ export default function CreateInvoice({
     const [count, setCount] = useState<string>('0')
     const selectArray: invoiceIdtype[] = []
     const [tbil, setTbil] = useState<{ discount: number, tax: number }>({ discount: 0, tax: 0 })
-    const allProductsApi = api.product.getProduct.useQuery({})
+    const [customerId, setCustomerId] = useState('')
+    const [csInfo, setCsInfo] = useState<{ name: string, phone: string } | null>(null)
+    const allProductsApi = api.product.getProduct.useQuery({}, { refetchOnMount: false })
+    const customerApi = api.invoice.getCustomer.useQuery({ dealerId: customerId }, { refetchOnMount: false })
 
     const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => {
         (e.target.value === '00110' || count == '0') ?
@@ -59,20 +63,37 @@ export default function CreateInvoice({
     const calculatetotal = () => {
         setBills(prevbil => ({ ...prevbil, totalBill: prevbil.originalbill + tbil.tax - tbil.discount }));
     }
+
+    const handleCustomer = () => {
+        customerApi.refetch().then((csapi) => {
+            if (!csapi.data || (csapi.data?.length == 0)) return setMessage({ error: true, message: "Dealer not found" })
+            setCsInfo({ name: csapi.data[0].name, phone: csapi.data[0].phone })
+        });
+        // let csdata = customerApi.data
+    }
     return (
         <div className="w-full bg-gray-100 bg-opacity-50 top-0 items-center left-0 flex justify-center h-full absolute">
             <form ref={formref} onSubmit={(e) => handleInvoiceForm(e)}
                 className="max-w-screen-md w-full bg-white p-5 relative flex-col flex gap-2">
                 <button className='absolute right-5 text-lg cursor-pointer top-2' onClick={() => setIsOpen(false)}>&times;</button>
+                <div className='flex w-full gap-1 items-end'>
+                    <div className='flex flex-col w-full'>
+                        <label htmlFor="id">Dealer code</label>
+                        <input value={customerId} onChange={(e) => setCustomerId(e.target.value)} autoComplete='off' className='outline-none border border-gray-200 rounded py-1 px-2'
+                            type="text" name="id" id="id" required />
+                    </div>
+                    <button type='button' onClick={() => handleCustomer()}
+                        className='w-12 h-[2.1rem] flex items-center justify-center outline-none border border-gray-200 rounded-sm'><MagnifyingGlassIcon className='w-4' /></button>
+                </div>
                 <div className='flex w-full gap-2'>
                     <div className='flex flex-col w-full'>
                         <label htmlFor="name">Customer Name</label>
-                        <input autoComplete='off' className='outline-none border w-full border-gray-200 rounded py-1 px-2'
+                        <input value={csInfo?.name} readOnly autoComplete='off' className='outline-none border w-full border-gray-200 rounded py-1 px-2'
                             type="text" name="name" id="name" required />
                     </div>
                     <div className='flex flex-col w-full'>
                         <label htmlFor="phone">Phone Number</label>
-                        <input autoComplete='off' className='outline-none border w-full border-gray-200 rounded py-1 px-2'
+                        <input value={csInfo?.phone} readOnly autoComplete='off' className='outline-none border w-full border-gray-200 rounded py-1 px-2'
                             type="text" name="phone" id="phone" required />
                     </div>
                 </div>
@@ -134,7 +155,7 @@ export default function CreateInvoice({
                     <div className='flex flex-col w-full'>
                         <label htmlFor="originalbill">Original Bill</label>
                         <input value={bills.originalbill} readOnly autoComplete='off' className='outline-none border w-full border-gray-200 rounded py-1 px-2'
-                            type="number" name="originalbill" id="originalbill" />
+                            type="number" name="originalbill" required id="originalbill" />
                     </div>
                 </div>
                 <button onClick={() => calculatetotal()} type='button' className='py-1 bg-sky-500 rounded text-white outline-none border border-gray-100'>calculate total bill</button>
@@ -142,7 +163,7 @@ export default function CreateInvoice({
                     <div className='flex flex-col w-full'>
                         <label htmlFor="totalbill">Total Bill</label>
                         <input value={bills.totalBill} readOnly autoComplete='off' className='outline-none border w-full border-gray-200 rounded py-1 px-2'
-                            type="number" name="totalbill" id="totalbill" />
+                            type="number" required name="totalbill" id="totalbill" />
                     </div>
                 </div>
                 <button disabled={loading}
