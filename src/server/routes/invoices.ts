@@ -116,7 +116,7 @@ export const invoiceRouter = createTRPCRouter({
         phone: z.string()
     })).
         mutation(async ({ input: { name, phone }, ctx: { db } }) => {
-            let dealercode = '2401' + String(Math.random()).split('.')[1].slice(0, 7)
+            let dealercode = '24' + String(Math.random()).split('.')[1].slice(0, 4)
             const newCustomer = await db.insert(CustomersTable).values({ name, phone, dealerId: dealercode })
                 .onConflictDoUpdate({
                     set: {
