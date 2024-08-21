@@ -18,7 +18,6 @@ export default function Revcalculate() {
       for (let j = 0; j < jsonlist.length; j++) {
         const filterdproduct = productseapi.data.filter(product => product.id == jsonlist[j].id)[0]
         if (!filterdproduct.pricetable) throw new Error("no price table")
-        console.log(filterdproduct);
         investamountinsells += (Number(filterdproduct.pricetable?.originalPrice) * jsonlist[j].count)
       }
       totalamountinsells += invoiceapi.data[i].totalbill
