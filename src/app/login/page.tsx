@@ -22,8 +22,8 @@ export default function Page() {
                 <div className='flex w-full gap-2 flex-col'>
                     <button className='w-full flex items-center justify-center gap-1 rounded-sm text-md py-1 border border-gray-200 text-black'
                         onClick={() => signIn("google")}><FcGoogle className='w-5' /> Sign in with Google</button>
-                    <button className='w-full flex items-center justify-center gap-1 rounded-sm text-md py-1 border border-gray-200 text-black'
-                        onClick={() => signIn("discord")}><FaDiscord className='w-5' /> Sign in with Discord</button>
+                    {/* <button className='w-full flex items-center justify-center gap-1 rounded-sm text-md py-1 border border-gray-200 text-black'
+                        onClick={() => signIn("discord")}><FaDiscord className='w-5' /> Sign in with Discord</button> */}
                 </div>
             </div>
         </div>
