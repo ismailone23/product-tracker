@@ -1,7 +1,7 @@
 import { api } from '@/trpc/shared'
 import { invoiceIdtype } from '@/types';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import React, { ChangeEvent, Dispatch, FormEvent, MutableRefObject, SetStateAction, useEffect, useState } from 'react'
+import React, { ChangeEvent, Dispatch, FormEvent, MutableRefObject, SetStateAction, useState } from 'react'
 
 export default function CreateInvoice({
     formref,
@@ -69,10 +69,9 @@ export default function CreateInvoice({
             if (!csapi.data || (csapi.data?.length == 0)) return setMessage({ error: true, message: "Dealer not found" })
             setCsInfo({ name: csapi.data[0].name, phone: csapi.data[0].phone })
         });
-        // let csdata = customerApi.data
     }
     return (
-        <div className="w-full bg-gray-100 bg-opacity-50 top-0 items-center left-0 flex justify-center h-full absolute">
+        <div className="w-full bg-gray-100 bg-opacity-50 top-0 items-center overflow-y-auto left-0 flex justify-center h-full absolute">
             <form ref={formref} onSubmit={(e) => handleInvoiceForm(e)}
                 className="max-w-screen-md w-full bg-white p-5 relative flex-col flex gap-2">
                 <button className='absolute right-5 text-lg cursor-pointer top-2' onClick={() => setIsOpen(false)}>&times;</button>

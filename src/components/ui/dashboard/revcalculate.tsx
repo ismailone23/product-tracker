@@ -1,6 +1,7 @@
+'use client'
+
 import { api } from '@/trpc/shared';
 import { invoiceIdtype } from '@/types';
-import React from 'react'
 
 export default function Revcalculate() {
   let investamountinsells = 0;
@@ -16,7 +17,8 @@ export default function Revcalculate() {
       const jsonlist = (JSON.parse(invoiceapi.data[i].purchased_list) as invoiceIdtype[])
       for (let j = 0; j < jsonlist.length; j++) {
         const filterdproduct = productseapi.data.filter(product => product.id == jsonlist[j].id)[0]
-
+        if (!filterdproduct.pricetable) throw new Error("no price table")
+        console.log(filterdproduct);
         investamountinsells += (Number(filterdproduct.pricetable?.originalPrice) * jsonlist[j].count)
       }
       totalamountinsells += invoiceapi.data[i].totalbill
