@@ -1,5 +1,5 @@
 {
-  "name": "my-turborepo",
+  "name": "alochona-mono",
   "private": true,
   "scripts": {
     "build": "turbo run build",
