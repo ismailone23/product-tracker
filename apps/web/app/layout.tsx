@@ -1,15 +1,10 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "../providers/theme-providers";
+import { CssBaseline } from "@mui/material";
 import "./globals.css";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,9 +17,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <InitColorSchemeScript attribute="class" />
+        <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            {children}
+          </ThemeProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );
